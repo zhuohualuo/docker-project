@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  luozhuohua:
+    build: ./luozhuohua
+    networks:
+      - vue-network
+
+  luozhuohua2:
+    build: ./luozhuohua2
+    networks:
+      - vue-network
+
+  nginx-proxy:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - vue-network
+
+networks:
+  vue-network:
+    driver: bridge
