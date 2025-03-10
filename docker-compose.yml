@@ -5,9 +5,7 @@ services:
     build: ./luozhuohua
     container_name: luozhuohua
     ports:
-      - "8080:80"
-    volumes:
-      - ./luozhuohua/dist:/usr/share/nginx/html/luozhuohua
+      - "8081:80"
     networks:
       - vue-network
 
@@ -15,9 +13,17 @@ services:
     build: ./luozhuohua2
     container_name: luozhuohua2
     ports:
-      - "8081:80"
+      - "8082:80"
+    networks:
+      - vue-network
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx
+    ports:
+      - "8080:80"
     volumes:
-      - ./luozhuohua2/dist:/usr/share/nginx/html/luozhuohua2
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
     networks:
       - vue-network
 
