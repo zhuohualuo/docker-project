@@ -18,7 +18,7 @@ services:
   # Vue3 项目 1
   luozhuohua:
     build:
-      context: ./project1
+      context: ./luozhuohua
       dockerfile: Dockerfile
     container_name: vue3_luozhuohua
     networks:
@@ -27,7 +27,7 @@ services:
   # Vue3 项目 2
   luozhuohua2:
     build:
-      context: ./project2
+      context: ./luozhuohua2
       dockerfile: Dockerfile
     container_name: vue3_luozhuohua2
     networks:
