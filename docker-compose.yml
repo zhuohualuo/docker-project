@@ -1,39 +1,26 @@
 version: '3.8'
 
 services:
-  # 主 Nginx 服务
-  nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    container_name: main_nginx
-    ports:
-      - "80:80"
-    depends_on:
-      - luozhuohua
-      - luozhuohua2
-    networks:
-      - vue-network
-
-  # Vue3 项目 1
   luozhuohua:
-    build:
-      context: ./luozhuohua
-      dockerfile: Dockerfile
-    container_name: vue3_luozhuohua
+    build: ./luozhuohua
+    container_name: luozhuohua
+    ports:
+      - "8080:80"
+    volumes:
+      - ./luozhuohua/dist:/usr/share/nginx/html/luozhuohua
     networks:
       - vue-network
 
-  # Vue3 项目 2
   luozhuohua2:
-    build:
-      context: ./luozhuohua2
-      dockerfile: Dockerfile
-    container_name: vue3_luozhuohua2
+    build: ./luozhuohua2
+    container_name: luozhuohua2
+    ports:
+      - "8081:80"
+    volumes:
+      - ./luozhuohua2/dist:/usr/share/nginx/html/luozhuohua2
     networks:
       - vue-network
 
-# 定义网络
 networks:
   vue-network:
     driver: bridge
