@@ -1,33 +1,60 @@
-# 通过在服务器上构建去部署
+# 指定 Docker Compose 文件的版本
 version: '3.8'
 
+# 定义服务（容器）
 services:
-  luozhuohua:
-    build: ./luozhuohua
-    container_name: luozhuohua
-    ports:
-      - "8081:80"
-    networks:
-      - vue-network
-
-  luozhuohua2:
-    build: ./luozhuohua2
-    container_name: luozhuohua2
-    ports:
-      - "8082:80"
-    networks:
-      - vue-network
-
+  # 定义一个名为 nginx 的服务
   nginx:
+    # 使用官方的 nginx:stable-alpine 镜像
     image: nginx:stable-alpine
+    # 设置容器的名称为 nginx
     container_name: nginx
+    # 将宿主机的 8080 端口映射到容器的 80 端口
     ports:
-      - "8080:80"
+      - '8080:80'
+    # 将本地的 nginx.conf 文件挂载到容器中，替换默认的 Nginx 配置文件
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    # 将该服务连接到名为 vue-network 的网络
     networks:
       - vue-network
 
+  # 定义一个名为 luozhuohua 的服务
+  luozhuohua:
+    # 使用 ./luozhuohua 目录下的 Dockerfile 构建镜像
+    build: ./luozhuohua
+    # 设置容器的名称为 luozhuohua
+    container_name: luozhuohua
+    # 将本地的 ./luozhuohua/dist 目录挂载到容器的 /usr/share/nginx/html 目录
+    # 这样可以直接将构建好的静态文件提供给 Nginx 使用
+    volumes:
+      - ./luozhuohua/dist:/usr/share/nginx/html
+    # 将宿主机的 8081 端口映射到容器的 80 端口
+    ports:
+      - '8081:80'
+    # 将该服务连接到名为 vue-network 的网络
+    networks:
+      - vue-network
+
+  # 定义一个名为 luozhuohua2 的服务
+  luozhuohua2:
+    # 使用 ./luozhuohua2 目录下的 Dockerfile 构建镜像
+    build: ./luozhuohua2
+    # 设置容器的名称为 luozhuohua2
+    container_name: luozhuohua2
+    # 将本地的 ./luozhuohua2/dist 目录挂载到容器的 /usr/share/nginx/html 目录
+    volumes:
+      - ./luozhuohua2/dist:/usr/share/nginx/html
+    # 将宿主机的 8082 端口映射到容器的 80 端口
+    ports:
+      - '8082:80'
+    # 将该服务连接到名为 vue-network 的网络
+    networks:
+      - vue-network
+
+# 定义网络
 networks:
+  # 定义一个名为 vue-network 的网络
   vue-network:
+    # 使用 bridge 驱动（默认的网络驱动，适用于单主机场景）
     driver: bridge
